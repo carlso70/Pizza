@@ -1,0 +1,22 @@
+#Ignore node modules 
+webapp/node_module*
+
+
+# Go binaries from programs and plugins
+backend/*.exe
+backend/*.dll
+backend/*.so
+backend/*.dylib
+# Test binary, built with go test -c
+backend/*.test
+
+# Output of the go coverage tool
+backend/*.out
+
+# Project-local glide cache
+backend/glide/
+
+#Mac files
+.DS_Store
+webapp/.DS_Store
+backend/.DS_Store

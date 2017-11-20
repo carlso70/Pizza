@@ -10,7 +10,6 @@ import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
 
 class Full extends Component {
-
    render() {
     return (
       <div className="app">

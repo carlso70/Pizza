@@ -1,8 +1,10 @@
 package repo
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/carlso70/pizza/backend/class"
 	"github.com/carlso70/pizza/backend/notes"
 )
 
@@ -79,5 +81,45 @@ func TestDeleteNotes(t *testing.T) {
 	}
 	if len(notes) >= size {
 		t.Errorf("Error Note Not Deleted Notes Count Still The Same")
+	}
+}
+
+func TestCreateClass(t *testing.T) {
+	students := make([]string, 0)
+	for i := 0; i < 10; i++ {
+		student := fmt.Sprint("student%d", i)
+		students = append(students, student)
+	}
+	c := &class.Class{Students: students, Title: "TestClass", Description: "Test description", Id: 15}
+	err := CreateClass(c)
+	if err != nil {
+		t.Errorf("Error Recieved:", err)
+	}
+}
+
+func TestGetAllClasses(t *testing.T) {
+	classes, err := GetAllClasses()
+	if len(classes) <= 0 {
+		t.Errorf("Error Invalid Class Count:", err)
+	}
+	if err != nil {
+		t.Errorf("Error Recieved:", err)
+	}
+}
+
+func TestFindClass(t *testing.T) {
+	c, err := FindClass("TestClass")
+	if c == nil {
+		t.Errorf("ERROR Class not found")
+	}
+	if err != nil {
+		t.Errorf("Error Recieved:", err)
+	}
+}
+
+func TestDeleteClass(t *testing.T) {
+	err := DeleteClass("TestClass")
+	if err != nil {
+		t.Errorf("Error Recieved:", err)
 	}
 }

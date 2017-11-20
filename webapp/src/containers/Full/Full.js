@@ -10,7 +10,8 @@ import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
 
 class Full extends Component {
-  render() {
+
+   render() {
     return (
       <div className="app">
         <Header />
@@ -21,7 +22,7 @@ class Full extends Component {
             <Container fluid>
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
-                <Redirect from="/" to="/dashboard"/>
+            <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>
           </main>

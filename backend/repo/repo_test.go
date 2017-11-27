@@ -1,125 +1,74 @@
 package repo
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/carlso70/pizza/backend/class"
-	"github.com/carlso70/pizza/backend/notes"
+	"github.com/carlso70/pizza/backend/user"
 )
 
-func TestDeleteUser(t *testing.T) {
-	if err := DeleteUser("test"); err != nil {
-		t.Error("Error DeletingUser: ", err)
-	}
-}
-
 func TestAddUserToDB(t *testing.T) {
+	usr := user.NewUser()
+	usr.Id = -1
+	usr.Username = "JimmyTest"
+
 	// Create dummy user
-	if err := CreateUser("test", "password"); err != nil {
+	if err := AddUserToDB(*usr); err != nil {
 		t.Error("Error CreatingUser: ", err)
 	}
 }
 
 func TestFindUser(t *testing.T) {
 	// Create a test user with an Id only tests will have
-	usr, err := FindUser("testUser")
-	if usr == nil {
-		t.Error("ERROR USER NOT FOUND")
-	}
+	usr, err := FindUser(-1)
 	if err != nil {
 		t.Errorf("Error in FindUser: %s", err)
+	}
+	if usr.Username != "JimmyTest" {
+		t.Errorf("Error in FindUser Invalid Username found: %s", usr.Username)
 	}
 }
 
 func TestGetAllUser(t *testing.T) {
-	users, err := GetAllUsers()
+	users, err := GetUsers()
 	t.Log("Users count:", len(users))
 	if err != nil && len(users) > 0 {
 		t.Errorf("Error Recieved:", err)
 	}
 }
 
-func TestSaveNotes(t *testing.T) {
-	text := []string{"Love cs252", "test test test love school jk dont love it"}
-	notes := notes.NewNote(text)
-	notes.Code = 10
-
-	err := SaveNotes(notes)
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
+func TestDeleteUser(t *testing.T) {
+	if err := DeleteUser(-1); err != nil {
+		t.Error("Error DeletingUser: ", err)
 	}
 }
 
-func TestGetAllNotes(t *testing.T) {
-	notes, err := GetAllNotes()
-	t.Log(notes)
-	if len(notes) <= 0 {
-		t.Errorf("Error Invalid Note Count:", len(notes))
-	}
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
-	}
-}
-
-func TestDeleteNotes(t *testing.T) {
-	notes, err := GetAllNotes()
-	if len(notes) <= 0 {
-		t.Errorf("Error Invalid Note Count:", len(notes))
-	}
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
-	}
-	size := len(notes)
-	err = DeleteNotes(10)
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
-	}
-	notes, err = GetAllNotes()
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
-	}
-	if len(notes) >= size {
-		t.Errorf("Error Note Not Deleted Notes Count Still The Same")
-	}
-}
-
-func TestCreateClass(t *testing.T) {
-	students := make([]string, 0)
-	for i := 0; i < 10; i++ {
-		student := fmt.Sprint("student%d", i)
-		students = append(students, student)
-	}
-	c := &class.Class{Students: students, Title: "TestClass", Description: "Test description", Id: 15}
-	err := CreateClass(c)
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
+func TestAddClass(t *testing.T) {
+	c := class.NewClass([]string{"test"}, "cs252", "scary")
+	if err := AddClassToDB(*c); err != nil {
+		t.Error("Error Adding Class: ", err)
 	}
 }
 
 func TestGetAllClasses(t *testing.T) {
 	classes, err := GetAllClasses()
-	if len(classes) <= 0 {
-		t.Errorf("Error Invalid Class Count:", err)
-	}
 	if err != nil {
-		t.Errorf("Error Recieved:", err)
+		t.Error("Error Getting All Classes:", err)
+	}
+	if len(classes) <= 0 {
+		t.Errorf("Invalid Class Count, Getting All Classes got %d classes back\n", len(classes))
 	}
 }
 
 func TestFindClass(t *testing.T) {
-	c, err := FindClass("TestClass")
-	if c == nil {
-		t.Errorf("ERROR Class not found")
-	}
+	_, err := FindClass("cs252")
 	if err != nil {
-		t.Errorf("Error Recieved:", err)
+		t.Error("ERROR FINDING CLASS:", err)
 	}
 }
 
 func TestDeleteClass(t *testing.T) {
-	err := DeleteClass("TestClass")
-	if err != nil {
-		t.Errorf("Error Recieved:", err)
+	if err := DeleteClass("cs252"); err != nil {
+		t.Error("Error Deleting Class: ", err)
 	}
 }

@@ -1,15 +1,21 @@
 package user
 
+import (
+	"github.com/carlso70/pizza/backend/notes"
+	"github.com/carlso70/pizza/backend/utils"
+)
+
 type User struct {
-	Username string   `json:"username"`
-	Password string   `json:"password"`
-	Notes    []string `json:"notes"`
+	Id       int          `json:"id" bson:"id"`
+	Username string       `json:"username" bson:"username"`
+	Password string       `json:"-" bson:"password"`
+	Notes    []notes.Note `json:"notes" bson:"notes"`
+	Classes  []string     `json:"classes" bson:"classes"`
 }
 
-func NewUser(name string, pass string, notes []string) *User {
+// NewUser returns a new user and generates a random id
+func NewUser() *User {
 	return &User{
-		Username: name,
-		Password: pass,
-		Notes:    notes,
+		Id: utils.GenerateId(),
 	}
 }

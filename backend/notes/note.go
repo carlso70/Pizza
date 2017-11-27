@@ -1,18 +1,14 @@
 package notes
 
-import (
-	"github.com/carlso70/pizza/backend/utils"
-)
-
-type Notes struct {
-	Code  int      `json:"code"`
-	Notes []string `json:"text"`
+type Note struct {
+	Class string   `json:"course_notes_name" bson:"course_notes_name"`
+	Notes []string `json:"course_note" bson:"course_notes"`
 }
 
 // NewNote creates a new Notes object and assigns a random note id
-func NewNote(note []string) *Notes {
-	return &Notes{
-		Code:  utils.GenerateId(),
+func NewNote(class string, note []string) *Note {
+	return &Note{
+		Class: class,
 		Notes: note,
 	}
 }

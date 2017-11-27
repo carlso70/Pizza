@@ -28,4 +28,10 @@ var routes = Routes{
 		"/auth/signin",
 		handlers.SignIn,
 	},
+	Route{
+		"CreateClass",
+		"POST",
+		"/class/create",
+		handlers.CreateClass,
+	},
 }

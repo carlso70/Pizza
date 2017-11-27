@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/carlso70/pizza/backend/repo"
+	"github.com/carlso70/pizza/backend/user"
 	"github.com/carlso70/pizza/backend/utils"
 )
 
@@ -34,7 +35,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = repo.CreateUser(request.username, request.password)
+	usr := user.NewUser()
+	usr.Username = request.username
+	usr.Password = utils.EncryptPass(request.password)
+
+	err = repo.AddUserToDB(*usr)
 	if err != nil {
 		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
 	} else {
@@ -61,12 +66,12 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usr, err := repo.FindUser(request.username)
+	usr, err := repo.FindUserByUsername(request.username)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	if usr.Password == utils.EncryptPass(request.password) {
+	if utils.DecryptPass(request.password, usr.Password) == nil {
 		byteSlice, err := json.Marshal(&usr)
 		if err != nil {
 			panic(err)

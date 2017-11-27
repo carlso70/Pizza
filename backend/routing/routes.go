@@ -34,4 +34,16 @@ var routes = Routes{
 		"/class/create",
 		handlers.CreateClass,
 	},
+	Route{
+		"LeaveClass",
+		"POST",
+		"/class/leave",
+		handlers.LeaveClass,
+	},
+	Route{
+		"JoinClass",
+		"POST",
+		"/class/join",
+		handlers.JoinClass,
+	},
 }

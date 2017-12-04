@@ -1,0 +1,1 @@
+export const loginUrl = "http://localhost:8081/auth/signin";

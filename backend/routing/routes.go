@@ -19,13 +19,13 @@ var routes = Routes{
 	Route{
 		"CreateUser",
 		"POST",
-		"/auth/create",
+		"/createuser",
 		handlers.CreateUser,
 	},
 	Route{
 		"SignIn",
 		"POST",
-		"/auth/signin",
+		"/signin",
 		handlers.SignIn,
 	},
 	Route{

@@ -12,12 +12,14 @@ import (
 )
 
 type AccountRequest struct {
-	username string `json:"username"`
-	password string `json:"password"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var request AccountRequest
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	fmt.Println("CREATE USER")
 	decoder := json.NewDecoder(r.Body)
@@ -27,17 +29,17 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	fmt.Println("username: ", request.username)
+	fmt.Println("username: ", request.Username)
 
 	// password encrypting check user is valid
-	if request.username == "" || request.password == "" {
+	if request.Username == "" || request.Password == "" {
 		http.Error(w, "Invalid Username or Password", 500)
 		return
 	}
 
 	usr := user.NewUser()
-	usr.Username = request.username
-	usr.Password = utils.EncryptPass(request.password)
+	usr.Username = request.Username
+	usr.Password = utils.EncryptPass(request.Password)
 
 	err = repo.AddUserToDB(*usr)
 	if err != nil {
@@ -49,6 +51,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var request AccountRequest
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	fmt.Println("SignIn")
 	decoder := json.NewDecoder(r.Body)
@@ -58,20 +61,21 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	fmt.Println("username: ", request.username)
+	fmt.Println("username: ", request.Username)
 
 	// password encrypting check user is valid
-	if request.username == "" || request.password == "" {
+	if request.Username == "" || request.Password == "" {
 		http.Error(w, "Invalid Username or Password", 500)
+		fmt.Fprintf(w, "%s", "{ \"message\":\"failure\"}")
 		return
 	}
 
-	usr, err := repo.FindUserByUsername(request.username)
+	usr, err := repo.FindUserByUsername(request.Username)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	if utils.DecryptPass(request.password, usr.Password) == nil {
+	if utils.DecryptPass(request.Password, usr.Password) == nil {
 		byteSlice, err := json.Marshal(&usr)
 		if err != nil {
 			panic(err)

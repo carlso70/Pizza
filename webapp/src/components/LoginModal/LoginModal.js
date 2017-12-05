@@ -1,20 +1,48 @@
 import React, { Component } from 'react';
-import {Alert, Modal, Button, FormGroup, Form, FormControl} from 'react-bootstrap';
-import {loginUrl} from '../../utils/urls'
+import {Label, Alert, Modal, Button, FormGroup, Form, FormControl} from 'react-bootstrap';
+import {loginUrl, createUserUrl } from '../../utils/urls'
 
 class LoginModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: this.props.show,
+            show: true,
+            validationState: null,
             username: "",
             password: "",
             alertVisible: false,
         }
 
-        this.close = this.close.bind(this)
-        this.setPassword = this.setPassword.bind(this)
-        this.setUsername = this.setUsername.bind(this)
+        this.close = this.close.bind(this);
+        this.createAccount = this.createAccount.bind(this);
+        this.login = this.login.bind(this);
+        this.setPassword = this.setPassword.bind(this);
+        this.setUsername = this.setUsername.bind(this);
+    }
+
+    createAccount(username, password) {
+        console.log(username)
+        var payload = {
+            username: username,
+            password: password,
+        }
+        fetch(createUserUrl, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            if (data) {
+                console.log(data)
+                // Save the user in localstorage
+                localStorage.setItem("pizzaUser", data.username);
+                this.close();
+            }
+        });
     }
 
     login(username, password) {
@@ -28,22 +56,22 @@ class LoginModal extends Component {
             mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
             },
             body: JSON.stringify(payload),
         }).then(function(response) {
-            if (response.ok)
+            console.log(response)
+            if (response.ok) {
                 return response.json();
-            return null;
+            } else {
+                alert("Error");
+                return null;
+            }
         }).then(function(data) {
             if (data) {
-                console.log(data)
-                alert("Welcome " + data.username)
+                console.log(data);
                 // Save the user in localstorage
-                localStorage.setItem("pizzaUser", data.username)
+                localStorage.setItem("pizzaUser", data.username);
                 this.close()
-            }else {
-                alert("Invalid Credentials")
             }
         });
     }
@@ -68,8 +96,11 @@ class LoginModal extends Component {
 
     render() {
         return (
-                <div>
-                <Modal show={this.state.show} autoFocus={true} onHide={this.close}>
+                <div style={{padding: 15}}>
+                <Modal.Dialog show={this.state.show} >
+                <Modal.Header>
+                <Modal.Title><Label>Log In / Create Account</Label></Modal.Title>
+                </Modal.Header>
                 <Modal.Body>
                 <Form horizontal>
                 <FormGroup bsSize="large">
@@ -87,16 +118,19 @@ class LoginModal extends Component {
             value={this.state.password}
             onChange={this.setPassword}
                 />
-                <Button onClick={() => this.login(this.state.username, this.state.password)}>
+                <Button style={{margin: 10}} onClick={() => this.login(this.state.username, this.state.password)}>
                 Sign in
+            </Button>
+                <Button onClick={() => this.createAccount(this.state.username, this.state.password)}>
+                Create Account
             </Button >
                 </FormGroup>
                 </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                <Button onClick={this.close}>Close</Button>
+                <Button onClick={() => this.close()}>Close</Button>
                 </Modal.Footer>
-                </Modal>
+                </Modal.Dialog>
                 </div>
         )
     }

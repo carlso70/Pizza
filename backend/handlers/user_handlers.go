@@ -19,8 +19,6 @@ type AccountRequest struct {
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var request AccountRequest
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
 	fmt.Println("CREATE USER")
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&request)
@@ -37,21 +35,32 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	u, _ := repo.FindUserByUsername(request.Username)
+	if u.Username == request.Username {
+		http.Error(w, "User Already Exists", 500)
+		fmt.Println("USER ALREADY EXISTS")
+		return
+	}
+
 	usr := user.NewUser()
 	usr.Username = request.Username
 	usr.Password = utils.EncryptPass(request.Password)
 
-	err = repo.AddUserToDB(*usr)
+	repo.AddUserToDB(*usr)
+	s, err := json.Marshal(usr)
 	if err != nil {
-		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
+		http.Error(w, "Invalid Username or Password", 500)
+		fmt.Println("Error Marshalling User")
 	} else {
-		fmt.Fprintf(w, "%s\n", "{ \"message\":\"success\"}")
+		//fmt.Fprintf(w, "%s\n", string(s))
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(s)
 	}
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var request AccountRequest
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	fmt.Println("SignIn")
 	decoder := json.NewDecoder(r.Body)
@@ -66,7 +75,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	// password encrypting check user is valid
 	if request.Username == "" || request.Password == "" {
 		http.Error(w, "Invalid Username or Password", 500)
-		fmt.Fprintf(w, "%s", "{ \"message\":\"failure\"}")
+		fmt.Println(w, "%s", "{ \"message\":\"failure\"}")
 		return
 	}
 
@@ -75,13 +84,16 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
-	if utils.DecryptPass(request.Password, usr.Password) == nil {
-		byteSlice, err := json.Marshal(&usr)
+	if err := utils.DecryptPass(request.Password, usr.Password); err == nil {
+		byteSlice, err := json.Marshal(usr)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Fprintf(w, "%s\n", string(byteSlice))
+		fmt.Println(string(byteSlice))
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(byteSlice)
 	} else {
-		fmt.Fprintf(w, "%s\n", "{ \"message\":\"invalid_password\"}")
+		http.Error(w, "Invalid Username or Password", 500)
 	}
 }

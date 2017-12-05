@@ -8,7 +8,7 @@ import (
 type User struct {
 	Id       int          `json:"id" bson:"id"`
 	Username string       `json:"username" bson:"username"`
-	Password string       `json:"-" bson:"password"`
+	Password string       `json:"password" bson:"password"`
 	Notes    []notes.Note `json:"notes" bson:"notes"`
 	Classes  []string     `json:"classes" bson:"classes"`
 }
@@ -16,6 +16,8 @@ type User struct {
 // NewUser returns a new user and generates a random id
 func NewUser() *User {
 	return &User{
-		Id: utils.GenerateId(),
+		Id:      utils.GenerateId(),
+		Notes:   []notes.Note{},
+		Classes: []string{},
 	}
 }

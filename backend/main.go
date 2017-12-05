@@ -14,5 +14,5 @@ func main() {
 	// GetInstance inits the gamemanager singleton
 	router := routing.NewRouter()
 
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }

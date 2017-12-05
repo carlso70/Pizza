@@ -55,6 +55,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(s)
@@ -93,6 +94,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(string(byteSlice))
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(byteSlice)

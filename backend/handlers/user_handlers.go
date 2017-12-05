@@ -51,12 +51,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Invalid Username or Password", 500)
 		fmt.Println("Error Marshalling User")
-	} else {
-		//fmt.Fprintf(w, "%s\n", string(s))
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(s)
+		return
 	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(s)
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +91,8 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		fmt.Println(string(byteSlice))
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write(byteSlice)

@@ -28,14 +28,12 @@ class LoginModal extends Component {
         }
         fetch(createUserUrl, {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',
             },
             body: JSON.stringify(payload),
         }).then(function(response) {
-            return response.json();
+            return response;
         }).then(function(data) {
             if (data) {
                 console.log(data)
@@ -54,9 +52,9 @@ class LoginModal extends Component {
         }
         fetch(loginUrl, {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin":"*",
+                'Content-Type': 'text/plain',
             },
             body: JSON.stringify(payload),
         }).then(function(response) {

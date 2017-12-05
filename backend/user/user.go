@@ -9,8 +9,8 @@ type User struct {
 	Id       int          `json:"id" bson:"id"`
 	Username string       `json:"username" bson:"username"`
 	Password string       `json:"password" bson:"password"`
-	Notes    []notes.Note `json:"notes" bson:"notes"`
-	Classes  []string     `json:"classes" bson:"classes"`
+	Notes    []notes.Note `json:"-" bson:"notes"`
+	Classes  []string     `json:"-" bson:"classes"`
 }
 
 // NewUser returns a new user and generates a random id

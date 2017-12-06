@@ -60,11 +60,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(s)
+	fmt.Fprintf(w, "%s\n", string(s))
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
@@ -99,11 +95,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(string(byteSlice))
 
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(byteSlice)
+		fmt.Fprintf(w, "%s\n", string(s))
 	} else {
 		http.Error(w, "Invalid Username or Password", 500)
 	}
@@ -142,11 +134,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(s)
+	fmt.Fprintf(w, "%s\n", string(s))
 }
 
 func SaveNotes(w http.ResponseWriter, r *http.Request) {
@@ -194,6 +182,5 @@ func SaveNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	w.Write(s)
+	fmt.Fprintf(w, "%s\n", string(s))
 }

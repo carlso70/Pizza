@@ -174,7 +174,7 @@ func LeaveClass(w http.ResponseWriter, r *http.Request) {
 func GetUserClasses(w http.ResponseWriter, r *http.Request) {
 	var request ClassRequest
 
-	fmt.Println("GET USER CLASSES")
+	fmt.Println("GET USER CLASSES for ", request.StudentName)
 
 	u, _ := repo.FindUserByUsername(request.StudentName)
 	c := repo.GetUserClasses(u)

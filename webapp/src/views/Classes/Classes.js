@@ -12,7 +12,7 @@ import {
     FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { getUserClasses, newClassUrl, getAllClassesUrl } from '../../utils/urls';
+import { joinCl, getUserClasses, newClassUrl, getAllClassesUrl } from '../../utils/urls';
 
 class Classes extends Component {
     constructor(props) {
@@ -39,7 +39,7 @@ class Classes extends Component {
     fetchUserClasses() {
         if (this.state.username == null) return;
         var payload = {
-            username: this.state.username
+            student: this.state.username
         }
         fetch(getUserClasses, {
             method: 'POST',
@@ -47,6 +47,22 @@ class Classes extends Component {
                 'Content-Type': 'text/plain',
             },
             body: JSON.stringify(payload),
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data) {
+                console.log(data)
+                this.setState({ classes : data});
+            }
+        });
+    }
+
+    fetchAllClasses() {
+        fetch(getAllClassesUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/plain',
+            }
         }).then(function(response) {
             return response.json();
         }).then(function(data) {
@@ -54,7 +70,6 @@ class Classes extends Component {
                 console.log(data)
             }
         });
-
     }
 
     postNewClass(title, description) {
@@ -76,6 +91,43 @@ class Classes extends Component {
                 console.log(data)
             }
         });
+    }
+
+    joinClass(title) {
+        var payload = {
+            title: title,
+            student: this.state.username
+        };
+        fetch(join, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify(payload),
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            if (data) {
+                console.log(data)
+            }
+        });
+    }
+
+    showJoinClassModal() {
+        fetch(getAllClassesUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/plain',
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data) {
+                this.setState({ allClasses: data});
+            }
+        });
+
+        this.setState({showJoinClassModal: true});
     }
 
     close() {
@@ -110,8 +162,10 @@ class Classes extends Component {
             return (
                     <div className="animated fadeIn">
                     <Panel>
-                    <Button bsStyle="success" bsSize="large" onClick={() => this.setState({showAddClassModal:true})}block>Create Class</Button>
-                    <Button bsStyle="primary" bsSize="large" onClick={() => this.setState({showJoinClassModal:true})} block>Join Class</Button>
+                    <Button bsStyle="success" bsSize="large" onClick={() => this.setState({showAddClassModal:true})} block>
+                    Create Class
+                    </Button>
+                    <Button bsStyle="primary" bsSize="large" onClick={() => this.showJoinClassModal()} block>Join Class</Button>
                     <Button bsStyle="danger" bsSize="large" onClick={() => this.setState({showLeaveClassModal:true})} block>Leave Class</Button>
                     </Panel>
                     <Panel header={<h4>{this.state.username}'s classes</h4>}>
@@ -168,7 +222,7 @@ class Classes extends Component {
                     <ListGroup>
                     {
                         this.state.classes.map(function(listValue){
-                            return <ListGroupItem bsStyle="danger" onClick={() => alert("TEST" + listValue)}>{listValue}</ListGroupItem>
+                            return <ListGroupItem bsStyle="danger" onClick={() => alert(listValue.title)}>{listValue.title}</ListGroupItem>
                         })
                     }
                     </ListGroup>
@@ -186,7 +240,7 @@ class Classes extends Component {
                     <ListGroup>
                     {
                         this.state.allClasses.map(function(listValue){
-                            return <ListGroupItem active>{listValue}</ListGroupItem>
+                            return <ListGroupItem active>{listValue.title}</ListGroupItem>
                         })
                     }
                     </ListGroup>

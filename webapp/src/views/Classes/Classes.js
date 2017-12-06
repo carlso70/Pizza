@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import LoginModal from '../../components/LoginModal/LoginModal';
 import {Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
+import { getClasses } from '../../utils/urls';
 
 class Classes extends Component {
     constructor(props) {
@@ -14,15 +15,32 @@ class Classes extends Component {
             noteCt: 5,
             questionCt: 10
         };
+
+        this.fetchUserClasses()
     }
 
     fetchUserClasses() {
-        if (this.state.username == null) return
-
-        fetch() {
-
+        if (this.state.username == null) return;
+        var payload = {
+            username: this.state.username
         }
+        fetch(getUserClasses, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify(payload),
+        }).then(function(response) {
+            return response;
+        }).then(function(data) {
+            if (data) {
+                console.log(data)
+                // Save the user in localstorage
+                location.reload();
+            }
+        });
     }
+
 
     render() {
         if (!this.state.loggedIn) {

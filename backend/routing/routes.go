@@ -53,6 +53,12 @@ var routes = Routes{
 		handlers.GetUser,
 	},
 	Route{
+		"GetUserClasses",
+		"POST",
+		"/getuserclasses",
+		handlers.GetUserClasses,
+	},
+	Route{
 		"GetAllClasses",
 		"GET",
 		"/class/all",

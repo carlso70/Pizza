@@ -206,3 +206,12 @@ func UpdateClass(cl class.Class) error {
 	err = c.Insert(cl)
 	return err
 }
+
+func GetUserClasses(u user.User) []class.Class {
+	classes := make([]class.Class, 0)
+	for class := range u.Classes {
+		c := FindClass(class)
+		classes = append(classes, c)
+	}
+	return classes
+}

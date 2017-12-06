@@ -171,6 +171,23 @@ func LeaveClass(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetUserClasses(w http.ResponseWriter, r *http.Request) {
+	var request ClassRequest
+
+	fmt.Println("GET USER CLASSES")
+
+	u := repo.FindUserByUsername(request.StudentName)
+	c := repo.GetUserClasses(u)
+
+	byteSlice, err := json.Marshal(&c)
+	if err != nil {
+		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
+		return
+	}
+
+	fmt.Fprintf(w, "%s\n", string(byteSlice))
+}
+
 func GetAllClasses(w http.ResponseWriter, r *http.Request) {
 	var request ClassRequest
 

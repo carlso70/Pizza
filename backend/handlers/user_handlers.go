@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/carlso70/pizza/backend/notes"
 	"github.com/carlso70/pizza/backend/repo"
 	"github.com/carlso70/pizza/backend/user"
 	"github.com/carlso70/pizza/backend/utils"
@@ -95,7 +96,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(string(byteSlice))
 
-		fmt.Fprintf(w, "%s\n", string(s))
+		fmt.Fprintf(w, "%s\n", string(byteSlice))
 	} else {
 		http.Error(w, "Invalid Username or Password", 500)
 	}
@@ -165,7 +166,7 @@ func SaveNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	n := note.Note{Class: request.Class, request.Note}
+	n := note.Note{Class: request.Class, Noterequest.Note}
 	u.Notes = append(u.Notes, n)
 
 	err = repo.UpdateUser(u)

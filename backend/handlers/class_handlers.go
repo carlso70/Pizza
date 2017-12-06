@@ -176,7 +176,7 @@ func GetUserClasses(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("GET USER CLASSES")
 
-	u := repo.FindUserByUsername(request.StudentName)
+	u, _ := repo.FindUserByUsername(request.StudentName)
 	c := repo.GetUserClasses(u)
 
 	byteSlice, err := json.Marshal(&c)
@@ -189,8 +189,6 @@ func GetUserClasses(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllClasses(w http.ResponseWriter, r *http.Request) {
-	var request ClassRequest
-
 	fmt.Println("GET ALL CLASSES")
 
 	// Get All Classes

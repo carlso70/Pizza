@@ -55,7 +55,7 @@ func (c *Class) CreateQuestion(ques string) {
 	c.Questions = append(c.Questions, q)
 }
 
-func (c *Class) AnswerQuestion(ques, answer string) err {
+func (c *Class) AnswerQuestion(ques, answer string) error {
 	for _, q := range c.Questions {
 		if q.Question == ques {
 			q.Answers = append(q.Answers, answer)

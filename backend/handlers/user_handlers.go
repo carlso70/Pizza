@@ -129,7 +129,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := json.Marshal(usr)
+	s, err := json.Marshal(u)
 	if err != nil {
 		http.Error(w, "Error Marshalling User", 500)
 		fmt.Println(err)

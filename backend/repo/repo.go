@@ -209,8 +209,8 @@ func UpdateClass(cl class.Class) error {
 
 func GetUserClasses(u user.User) []class.Class {
 	classes := make([]class.Class, 0)
-	for class := range u.Classes {
-		c := FindClass(class)
+	for _, class := range u.Classes {
+		c, _ := FindClass(class)
 		classes = append(classes, c)
 	}
 	return classes

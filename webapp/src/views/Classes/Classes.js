@@ -33,14 +33,13 @@ class Classes extends Component {
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleNewClassName = this.handleNewClassName.bind(this);
         this.close = this.close.bind(this);
-        this.fetchUserClasses();
+        this.fetchUserClasses(username);
     }
 
-    fetchUserClasses() {
-        if (this.state.username == null) return;
+    fetchUserClasses(username) {
         var payload = {
-            student: this.state.username
-        }
+            student: username
+        };
         fetch(getUserClasses, {
             method: 'POST',
             headers: {

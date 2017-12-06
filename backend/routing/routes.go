@@ -82,4 +82,10 @@ var routes = Routes{
 		"/createquestion",
 		handlers.CreateQuestion,
 	},
+	Route{
+		"SaveNotes",
+		"POST",
+		"/savenotes",
+		handlers.SaveNotes,
+	},
 }

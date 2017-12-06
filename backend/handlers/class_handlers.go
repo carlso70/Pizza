@@ -174,6 +174,13 @@ func LeaveClass(w http.ResponseWriter, r *http.Request) {
 func GetUserClasses(w http.ResponseWriter, r *http.Request) {
 	var request ClassRequest
 
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Body.Close()
+
 	fmt.Println("GET USER CLASSES for ", request.StudentName)
 
 	u, _ := repo.FindUserByUsername(request.StudentName)

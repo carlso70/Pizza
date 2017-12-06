@@ -8,6 +8,9 @@ export const getClass = "http://ec2-18-221-200-72.us-east-2.compute.amazonaws.co
 export const getUserClasses = "http://ec2-18-221-200-72.us-east-2.compute.amazonaws.com:8080/getuserclasses";
 export const answerQuestionUrl = "http://ec2-18-221-200-72.us-east-2.compute.amazonaws.com:8080/answerquestion";
 export const createQuestionUrl = "http://ec2-18-221-200-72.us-east-2.compute.amazonaws.com:8080/createquestion";
+export const getNotesUrl = "http://ec2-18-221-200-72.us-east-2.compute.amazonaws.com:8080/getnotes";
+export const saveNotesUrl = "http://ec2-18-221-200-72.us-east-2.compute.amazonaws.com:8080/savenotes";
+
 
 
 

@@ -16,6 +16,12 @@ type AccountRequest struct {
 	Password string `json:"password"`
 }
 
+type NotesRequest struct {
+	Username string `json:"username"`
+	Class    string `json:"class"`
+	Note     string `json:"note"`
+}
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var request AccountRequest
 
@@ -139,6 +145,48 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(s)
+}
+
+func SaveNotes(w http.ResponseWriter, r *http.Request) {
+	var request NotesRequest
+
+	fmt.Println("Save Note")
+
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Body.Close()
+
+	fmt.Println("username: ", request.Username)
+	fmt.Println("Adding Note: ", request.Note, "To ", request.Class, "Notes")
+
+	// Check if username is null
+	if request.Username == "" || request.Note == "" || request.Class == "" {
+		http.Error(w, "Invalid Username or Password", 500)
+		return
+	}
+
+	u, err := repo.FindUserByUsername(request.Username)
+	if err != nil {
+		http.Error(w, "User not found", 500)
+		fmt.Println(err)
+		return
+	}
+
+	u.AddToNotes(request.Class, request.Note)
+	repo.UpdateUser(u)
+
+	s, err := json.Marshal(u)
+	if err != nil {
+		http.Error(w, "Error Marshalling User", 500)
+		fmt.Println(err)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 	w.Write(s)
 }

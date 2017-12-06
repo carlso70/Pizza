@@ -25,3 +25,16 @@ func NewUser() *User {
 		QuestionAnswerCt: 0,
 	}
 }
+
+func (u *User) AddToNotes(class, note string) {
+	for _, value := range u.Notes {
+		if value.Class == class {
+			value.Notes = append(value.Notes, note)
+			return
+		}
+	}
+
+	// If it doesn't exist create a new note
+	n := notes.NewNote(class, []string{note})
+	u.Notes = append(u.Notes, *n)
+}

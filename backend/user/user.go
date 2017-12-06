@@ -36,5 +36,5 @@ func (u *User) AddToNotes(class, note string) {
 
 	// If it doesn't exist create a new note
 	n := notes.NewNote(class, []string{note})
-	u.Notes = append(u.Notes, *n)
+	u.Notes = append(u.Notes, n)
 }

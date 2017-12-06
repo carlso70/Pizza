@@ -6,8 +6,8 @@ type Note struct {
 }
 
 // NewNote creates a new Notes object and assigns a random note id
-func NewNote(class string, note []string) *Note {
-	return &Note{
+func NewNote(class string, note []string) Note {
+	return Note{
 		Class: class,
 		Notes: note,
 	}

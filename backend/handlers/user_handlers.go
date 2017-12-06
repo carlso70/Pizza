@@ -166,7 +166,7 @@ func SaveNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	n := note.Note{Class: request.Class, Note: request.Note}
+	n := notes.Note{Class: request.Class, Note: request.Note}
 	u.Notes = append(u.Notes, n)
 
 	err = repo.UpdateUser(u)

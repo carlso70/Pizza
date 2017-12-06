@@ -6,11 +6,11 @@ class LoginModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: true,
+            show: 'true',
             validationState: null,
             username: "",
             password: "",
-            alertVisible: false,
+            alertVisible: false
         }
 
         this.close = this.close.bind(this);
@@ -39,9 +39,11 @@ class LoginModal extends Component {
                 console.log(data)
                 // Save the user in localstorage
                 localStorage.setItem("pizzaUser", data.username);
-                this.close();
+                location.reload();
             }
         });
+
+        this.close();
     }
 
     login(username, password) {
@@ -53,8 +55,7 @@ class LoginModal extends Component {
         fetch(loginUrl, {
             method: 'POST',
             headers: {
-                "Access-Control-Allow-Origin":"*",
-                'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(payload),
         }).then(function(response) {
@@ -70,9 +71,11 @@ class LoginModal extends Component {
                 console.log(data);
                 // Save the user in localstorage
                 localStorage.setItem("pizzaUser", data.username);
-                this.close()
+                location.reload();
             }
         });
+
+        this.close();
     }
 
     close() {
@@ -96,7 +99,7 @@ class LoginModal extends Component {
     render() {
         return (
                 <div style={{padding: 15}}>
-                <Modal.Dialog show={this.state.show} >
+                <Modal.Dialog show={this.state.show}>
                 <Modal.Header>
                 <Modal.Title><Label>Log In / Create Account</Label></Modal.Title>
                 </Modal.Header>

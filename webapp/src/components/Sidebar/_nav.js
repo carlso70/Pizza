@@ -14,5 +14,10 @@ export default {
             url: '/user',
             icon: 'icon-user'
         },
+        {
+            name: 'Notes',
+            url: '/notes',
+            icon: 'icon-docs'
+        },
     ]
 };

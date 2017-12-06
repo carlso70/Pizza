@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import LoginModal from '../../components/LoginModal/LoginModal';
-import {Panel, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
+import {Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { checkLoggedIn } from '../../utils/userTools';
 
 class User extends Component {
     constructor(props) {
         super(props);
+        var username = checkLoggedIn();
         this.state = {
-            username: "",
-            loggedIn: false,
-            classes:['TEST CLASS1', 'TEST CLASS2']
-        }
-        this.checkLoggedIn()
-    }
-
-    checkLoggedIn() {
-
+            username: username,
+            loggedIn: username == null ? false : true,
+            classes:['TEST CLASS1', 'TEST CLASS2'],
+            noteCt: 5,
+            questionCt: 10
+        };
     }
 
     render() {
@@ -28,16 +27,21 @@ class User extends Component {
         }else {
             return (
                     <div className="animated fadeIn">
-                    <Jumbotron>
-                    <h4>Your Classes</h4>
+                    <Panel header={<h4>{this.state.username}'s classes</h4>}>
                     <ListGroup>
-                    { this.state.classes.map(function(listValue){
-                        return <ListGroupItem>{listValue}</ListGroupItem>
-                    })}
+                    {
+                        this.state.classes.map(function(listValue){
+                            return <ListGroupItem>{listValue}</ListGroupItem>
+                        })
+                    }
                     </ListGroup>
-                    </Jumbotron>
-                    <Panel header={<h4>User</h4>}>
-                    Total Classes Enrolled
+                    </Panel>
+                    <Panel header={<h4>{this.state.username}'s stats</h4>}>
+                    <ListGroup>
+                    <ListGroupItem>Total Classes Enrolled: {this.state.classes.length}</ListGroupItem>
+                    <ListGroupItem>Total Notes Saved: {this.state.noteCt}</ListGroupItem>
+                    <ListGroupItem>Total Questions Asked: {this.state.questionCt}</ListGroupItem>
+                    </ListGroup>
                     </Panel>
                     </div>
             );

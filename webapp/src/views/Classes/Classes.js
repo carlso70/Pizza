@@ -6,7 +6,10 @@ import {
     ListGroupItem,
     Button,
     ButtonGroup,
-    Modal
+    Modal,
+    Form,
+    FormControl,
+    FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
 import { getUserClasses } from '../../utils/urls';
@@ -26,7 +29,8 @@ class Classes extends Component {
             showJoinClassModal: false
         };
 
-        this.fetchUserClasses()
+        this.close = this.close.bind(this);
+        this.fetchUserClasses();
     }
 
     fetchUserClasses() {
@@ -45,8 +49,16 @@ class Classes extends Component {
         }).then(function(data) {
             if (data) {
                 console.log(data)
-                // Save the user in localstorage
             }
+        });
+
+    }
+
+    close() {
+        this.setState({
+            showAddClassModal: false,
+            showJoinClassModal: false,
+            showLeaveClassModal: false
         });
     }
 
@@ -62,9 +74,9 @@ class Classes extends Component {
             return (
                     <div className="animated fadeIn">
                     <Panel>
-                    <Button bsStyle="success" bsSize="large" block>Create Class</Button>
-                    <Button bsStyle="primary" bsSize="large" block>Join Class</Button>
-                    <Button bsStyle="danger" bsSize="large" block>Leave Class</Button>
+                    <Button bsStyle="success" bsSize="large" onClick={() => this.setState({showAddClassModal:true})}block>Create Class</Button>
+                    <Button bsStyle="primary" bsSize="large" onClick={() => this.setState({showJoinClassModal:true})} block>Join Class</Button>
+                    <Button bsStyle="danger" bsSize="large" onClick={() => this.setState({showLeaveClassModal:true})} block>Leave Class</Button>
                     </Panel>
                     <Panel header={<h4>{this.state.username}'s classes</h4>}>
                     <ListGroup>
@@ -86,15 +98,22 @@ class Classes extends Component {
 
                     <Modal show={this.state.showAddClassModal} onHide={this.close}>
                     <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Add Class</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    <Form>
+                    <FormGroup>
+                    <FormControl type="text" placeholder="Class Name"/>
+                    </FormGroup>
+                    <FormGroup>
+                    <FormControl type="text" placeholder="Description"/>
+                    </FormGroup>
+                    </Form>
                     </Modal.Body>
                     <Modal.Footer>
                     <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                     </Modal>
-
 
                     <Modal show={this.state.showLeaveClassModal} onHide={this.close}>
                     <Modal.Header closeButton>
@@ -120,7 +139,7 @@ class Classes extends Component {
                     </Modal>
 
 
-                    </div>
+                </div>
             );
         }
     }

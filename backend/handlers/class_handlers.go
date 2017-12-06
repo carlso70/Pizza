@@ -12,7 +12,7 @@ import (
 
 type ClassRequest struct {
 	Title       string `json:"title"`
-	Description string `json:"password"`
+	Description string `json:"description"`
 	StudentName string `json:"student"`
 }
 

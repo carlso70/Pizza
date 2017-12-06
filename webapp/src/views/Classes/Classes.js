@@ -12,7 +12,7 @@ import {
     FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { getUserClasses } from '../../utils/urls';
+import { getUserClasses, newClassUrl, getAllClassesUrl } from '../../utils/urls';
 
 class Classes extends Component {
     constructor(props) {
@@ -21,14 +21,17 @@ class Classes extends Component {
         this.state = {
             username: username,
             loggedIn: username == null ? false : true,
-            classes:['TEST CLASS1', 'TEST CLASS2'],
-            noteCt: 5,
-            questionCt: 10,
+            classes:[],
+            allClasses: [],
             showAddClassModal: false,
             showLeaveClassModal: false,
-            showJoinClassModal: false
+            showJoinClassModal: false,
+            newClassName: "",
+            newClassDescription: ""
         };
 
+        this.handleDescChange = this.handleDescChange.bind(this);
+        this.handleNewClassName = this.handleNewClassName.bind(this);
         this.close = this.close.bind(this);
         this.fetchUserClasses();
     }
@@ -45,7 +48,7 @@ class Classes extends Component {
             },
             body: JSON.stringify(payload),
         }).then(function(response) {
-            return response;
+            return response.json();
         }).then(function(data) {
             if (data) {
                 console.log(data)
@@ -54,11 +57,44 @@ class Classes extends Component {
 
     }
 
+    postNewClass(title, description) {
+        var payload = {
+            title: title,
+            description: description,
+            student: this.state.username
+        }
+        fetch(newClassUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify(payload),
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            if (data) {
+                console.log(data)
+            }
+        });
+    }
+
     close() {
         this.setState({
             showAddClassModal: false,
             showJoinClassModal: false,
             showLeaveClassModal: false
+        });
+    }
+
+    handleDescChange(e) {
+        this.setState({
+            newClassDescription: e.target.value
+        });
+    }
+
+    handleNewClassName(e) {
+        this.setState({
+            newClassName: e.target.value
         });
     }
 
@@ -103,35 +139,57 @@ class Classes extends Component {
                     <Modal.Body>
                     <Form>
                     <FormGroup>
-                    <FormControl type="text" placeholder="Class Name"/>
+                    <FormControl
+               type="text"
+               placeholder="Class Name"
+               value={this.state.newClassName}
+               onChange={this.handleNewClassName}/>
                     </FormGroup>
                     <FormGroup>
-                    <FormControl type="text" placeholder="Description"/>
+                    <FormControl
+                type="text"
+                placeholder="Description"
+                value={this.state.newClassDescription}
+                onChange={this.handleDescChange}/>
                     </FormGroup>
                     </Form>
                     </Modal.Body>
                     <Modal.Footer>
+                    <Button onClick={() => this.postNewClass(this.state.newClassName, this.state.newClassDescription)}>Add</Button>
                     <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                     </Modal>
 
                     <Modal show={this.state.showLeaveClassModal} onHide={this.close}>
                     <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>CLICK CLASS TO LEAVE</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    <ListGroup>
+                    {
+                        this.state.classes.map(function(listValue){
+                            return <ListGroupItem bsStyle="danger" onClick={() => alert("TEST" + listValue)}>{listValue}</ListGroupItem>
+                        })
+                    }
+                    </ListGroup>
                     </Modal.Body>
                     <Modal.Footer>
                     <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                     </Modal>
 
-
                     <Modal show={this.state.showJoinClassModal} onHide={this.close}>
                     <Modal.Header closeButton>
                     <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
+                    <ListGroup>
+                    {
+                        this.state.allClasses.map(function(listValue){
+                            return <ListGroupItem active>{listValue}</ListGroupItem>
+                        })
+                    }
+                    </ListGroup>
                     </Modal.Body>
                     <Modal.Footer>
                     <Button onClick={this.close}>Close</Button>

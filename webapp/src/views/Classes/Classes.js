@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import LoginModal from '../../components/LoginModal/LoginModal';
-import {Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
+import {
+    Panel,
+    ListGroup,
+    ListGroupItem,
+    Button,
+    ButtonGroup,
+    Modal
+} from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { getClasses } from '../../utils/urls';
+import { getUserClasses } from '../../utils/urls';
 
 class Classes extends Component {
     constructor(props) {
@@ -13,7 +20,10 @@ class Classes extends Component {
             loggedIn: username == null ? false : true,
             classes:['TEST CLASS1', 'TEST CLASS2'],
             noteCt: 5,
-            questionCt: 10
+            questionCt: 10,
+            showAddClassModal: false,
+            showLeaveClassModal: false,
+            showJoinClassModal: false
         };
 
         this.fetchUserClasses()
@@ -36,11 +46,9 @@ class Classes extends Component {
             if (data) {
                 console.log(data)
                 // Save the user in localstorage
-                location.reload();
             }
         });
     }
-
 
     render() {
         if (!this.state.loggedIn) {
@@ -53,6 +61,11 @@ class Classes extends Component {
         }else {
             return (
                     <div className="animated fadeIn">
+                    <Panel>
+                    <Button bsStyle="success" bsSize="large" block>Create Class</Button>
+                    <Button bsStyle="primary" bsSize="large" block>Join Class</Button>
+                    <Button bsStyle="danger" bsSize="large" block>Leave Class</Button>
+                    </Panel>
                     <Panel header={<h4>{this.state.username}'s classes</h4>}>
                     <ListGroup>
                     {
@@ -69,6 +82,44 @@ class Classes extends Component {
                     <ListGroupItem>Total Questions Asked: {this.state.questionCt}</ListGroupItem>
                     </ListGroup>
                     </Panel>
+
+
+                    <Modal show={this.state.showAddClassModal} onHide={this.close}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button onClick={this.close}>Close</Button>
+                    </Modal.Footer>
+                    </Modal>
+
+
+                    <Modal show={this.state.showLeaveClassModal} onHide={this.close}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button onClick={this.close}>Close</Button>
+                    </Modal.Footer>
+                    </Modal>
+
+
+                    <Modal show={this.state.showJoinClassModal} onHide={this.close}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button onClick={this.close}>Close</Button>
+                    </Modal.Footer>
+                    </Modal>
+
+
                     </div>
             );
         }

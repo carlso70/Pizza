@@ -96,6 +96,35 @@ func JoinClass(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetClass(w http.ResponseWriter, r *http.Request) {
+	var request ClassRequest
+
+	fmt.Println("GET CLASS")
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Body.Close()
+
+	fmt.Println("Title: ", request.Title)
+
+	// Add student to class
+	c, err := repo.FindClass(request.Title)
+	if err != nil {
+		http.Error(w, "Class Not Found", 500)
+		return
+	}
+
+	byteSlice, err := json.Marshal(&c)
+	if err != nil {
+		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
+		return
+	}
+
+	fmt.Fprintf(w, "%s\n", string(byteSlice))
+}
+
 func LeaveClass(w http.ResponseWriter, r *http.Request) {
 	var request ClassRequest
 
@@ -142,26 +171,12 @@ func LeaveClass(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetClasses(w http.ResponseWriter, r *http.Request) {
+func GetAllClasses(w http.ResponseWriter, r *http.Request) {
 	var request ClassRequest
 
-	fmt.Println("GET CLASSES")
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&request)
-	if err != nil {
-		panic(err)
-	}
-	defer r.Body.Close()
+	fmt.Println("GET ALL CLASSES")
 
-	fmt.Println("Title: ", request.Title)
-
-	// password encrypting check user is valid
-	if request.Title == "" {
-		http.Error(w, "Empty Title", 500)
-		return
-	}
-
-	// Add student to class
+	// Get All Classes
 	c, err := repo.GetAllClasses()
 	if len(c) == 0 || err != nil {
 		http.Error(w, "Class Not Found", 500)
@@ -216,6 +231,74 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	}
 
 	usr.QuestionCt += 1
+
+	// Update the class and user
+	err = repo.UpdateClass(c)
+	if err != nil {
+		panic(err)
+		http.Error(w, "Error Updating Class", 500)
+		return
+	}
+
+	err = repo.UpdateUser(usr)
+	if err != nil {
+		panic(err)
+		http.Error(w, "Error Updating User", 500)
+		return
+	}
+
+	byteSlice, err := json.Marshal(&c)
+	if err != nil {
+		panic(errors.New("Error Marshalling class"))
+		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
+		return
+	}
+
+	fmt.Fprintf(w, "%s\n", string(byteSlice))
+}
+
+func AnswerQuestion(w http.ResponseWriter, r *http.Request) {
+	var request QuestionRequest
+
+	fmt.Println("Answer Question")
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Body.Close()
+
+	fmt.Println("Title: ", request.ClassTitle)
+
+	// Check fields are valid
+	if request.ClassTitle == "" || request.Answer == "" || request.Question == "" {
+		http.Error(w, "Empty Fields", 500)
+		return
+	}
+
+	// Find class
+	c, err := repo.FindClass(request.ClassTitle)
+	if err != nil {
+		panic(err)
+		http.Error(w, "Class Not Found", 500)
+		return
+	}
+
+	// find the user who created the question and add to their questionAskedCt
+	usr, err := repo.FindUserByUsername(request.User)
+	if err != nil {
+		panic(err)
+		http.Error(w, "User Not Found", 500)
+		return
+	}
+
+	err = c.AnswerQuestion(request.Question, request.Answer)
+	if err != nil {
+		panic(err)
+		http.Error(w, "Question Not Found", 500)
+		return
+	}
+	usr.QuestionAnswerCt += 1
 
 	// Update the class and user
 	err = repo.UpdateClass(c)

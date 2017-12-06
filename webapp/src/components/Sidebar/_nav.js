@@ -19,5 +19,10 @@ export default {
             url: '/notes',
             icon: 'icon-docs'
         },
+        {
+            name: 'Classes',
+            url: '/classes',
+            icon: 'icon-book-open'
+        }
     ]
 };

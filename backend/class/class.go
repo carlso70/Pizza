@@ -55,10 +55,12 @@ func (c *Class) CreateQuestion(ques string) {
 	c.Questions = append(c.Questions, q)
 }
 
-func (c *Class) AnswerQuestion(ques, answer string) {
+func (c *Class) AnswerQuestion(ques, answer string) err {
 	for _, q := range c.Questions {
 		if q.Question == ques {
 			q.Answers = append(q.Answers, answer)
+			return nil
 		}
 	}
+	return errors.New("Question Not Found Error")
 }

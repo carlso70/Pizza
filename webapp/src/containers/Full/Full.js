@@ -10,6 +10,7 @@ import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
 import User from '../../views/User/User';
 import NoteTaker from '../../views/NoteTaker/NoteTaker';
+import Classes from '../../views/Classes/Classes';
 
 class Full extends Component {
    render() {
@@ -24,7 +25,8 @@ class Full extends Component {
               <Switch>
             <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
             <Route path="/user" name="User" component={User}/>
-            <Route path="/notes" name="Notes" component={NoteTaker}/>
+            <Route path="/notes" name="Notes" component={NoteTaker}/>a
+            <Route path="/classes" name="classes" component={Classes}/>
             <Redirect from="/" to="/dashboard"/>
               </Switch>
             </Container>

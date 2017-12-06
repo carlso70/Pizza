@@ -46,4 +46,34 @@ var routes = Routes{
 		"/class/join",
 		handlers.JoinClass,
 	},
+	Route{
+		"GetUser",
+		"POST",
+		"/getuser",
+		handlers.GetUser,
+	},
+	Route{
+		"GetAllClasses",
+		"GET",
+		"/class/all",
+		handlers.GetAllClasses,
+	},
+	Route{
+		"GetClass",
+		"POST",
+		"/getclass",
+		handlers.GetClass,
+	},
+	Route{
+		"AnswerQuestion",
+		"POST",
+		"/answerquestion",
+		handlers.AnswerQuestion,
+	},
+	Route{
+		"CreateQuestion",
+		"POST",
+		"/createquestion",
+		handlers.CreateQuestion,
+	},
 }

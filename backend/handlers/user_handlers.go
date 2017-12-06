@@ -102,3 +102,43 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid Username or Password", 500)
 	}
 }
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	var request AccountRequest
+
+	fmt.Println("GET USER")
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&request)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Body.Close()
+
+	fmt.Println("username: ", request.Username)
+
+	// Check if username is null
+	if request.Username == "" {
+		http.Error(w, "Invalid Username or Password", 500)
+		return
+	}
+
+	u, err := repo.FindUserByUsername(request.Username)
+	if err != nil {
+		http.Error(w, "User not found", 500)
+		fmt.Println(err)
+		return
+	}
+
+	s, err := json.Marshal(usr)
+	if err != nil {
+		http.Error(w, "Error Marshalling User", 500)
+		fmt.Println(err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(s)
+}

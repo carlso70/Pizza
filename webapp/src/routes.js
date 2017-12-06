@@ -3,6 +3,7 @@ const routes = {
     '/dashboard': 'Dashboard',
     '/user': 'User',
     '/login': 'Login',
-    '/notes': 'Notes'
+    '/notes': 'Notes',
+    '/classes': 'Classes'
 };
 export default routes;

@@ -177,8 +177,15 @@ func SaveNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.AddToNotes(request.Class, request.Note)
-	repo.UpdateUser(u)
+	n := note.Note{Class: request.Class, request.Note}
+	u.Notes = append(u.Notes, n)
+
+	err = repo.UpdateUser(u)
+	if err != nil {
+		http.Error(w, "Error Updating User", 500)
+		fmt.Println(err)
+		return
+	}
 
 	s, err := json.Marshal(u)
 	if err != nil {

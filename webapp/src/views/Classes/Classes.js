@@ -18,6 +18,10 @@ class Classes extends Component {
 
     fetchUserClasses() {
         if (this.state.username == null) return
+
+        fetch() {
+
+        }
     }
 
     render() {

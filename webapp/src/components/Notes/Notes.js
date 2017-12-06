@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Label, Alert, Modal, Button, FormGroup, Form, FormControl} from 'react-bootstrap';
+import {Label, Alert, Modal, Button, ButtonToolbar, FormGroup, Form, FormControl} from 'react-bootstrap';
 import {loginUrl, createUserUrl } from '../../utils/urls'
 
 class LoginModal extends Component {
@@ -9,12 +9,10 @@ class LoginModal extends Component {
             show: 'true',
             validationState: null,
             username: "",
-            classnotes: ""
+            classnotes: "",
+            isLoading: false
             
         }
-    }
-    handleChange(e) {
-        this.setState({ classnotes: e.target.value});
     }
 
     getValidationState() {
@@ -22,6 +20,17 @@ class LoginModal extends Component {
         if (length > 0) return 'success';
         else if (length == 0) return 'warning';
         return null;
+      }
+
+      handleClick() {
+        this.setState({ isLoading: true });
+    
+        //TODO SAVE NOTES FOR CLASS HERE
+
+        setTimeout(() => {
+          // Completed of async action, set loading state back
+          this.setState({ isLoading: false });
+        }, 2000);
       }
 
     render() {
@@ -38,11 +47,24 @@ class LoginModal extends Component {
             type="text"
             value={this.state.classnotes}
             placeholder="Begin entering your notes..."
-            onChange={this.handleChange}
+            //onChange={this.handleChange}
           />
           <FormControl.Feedback />
           <HelpBlock>Take notes for your current class here!</HelpBlock>
         </FormGroup>
       </Form>
+      <ButtonToolbar>
+            {/* Provides extra visual weight and identifies the primary action in a set of buttons */}
+            <Button bsStyle="primary" bsSize="large">Primary</Button>
+    
+            {/* Indicates a successful or positive action */}
+            <Button 
+                    bsStyle="success" 
+                    disabled={isLoading}
+                    onClick={!isLoading ? this.handleClick : null}>
+                    {isLoading ? 'Saving...' : 'Save'}</Button> 
+            </ButtonToolbar>
                 </div>
-        )}}
+        )
+    }
+}

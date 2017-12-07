@@ -196,14 +196,18 @@ func UpdateClass(cl class.Class) error {
 	defer session.Close()
 
 	// Collection
-	c := session.DB(Database).C(Collection)
+	c := session.DB(Database).C(ClassCollection)
 
 	// Remove old user
 	err = c.Remove(bson.M{"title": cl.Title})
 	if err != nil {
+		fmt.Println("Error Removing class")
 		return err
 	}
 	err = c.Insert(cl)
+	if err != nil {
+		fmt.Println("Error Inserting new class")
+	}
 	return err
 }
 

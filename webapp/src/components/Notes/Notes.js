@@ -3,6 +3,7 @@ import {Label, Alert, Modal, Button, ButtonToolbar, FormGroup, Form, FormControl
 import {loginUrl, createUserUrl, saveNotesUrl } from '../../utils/urls';
 import { checkLoggedIn } from '../../utils/userTools';
 import LoginModal from '../LoginModal/LoginModal';
+import NoteTaker from '../../views/NoteTaker/NoteTaker';
 
 
 class Notes extends Component {
@@ -51,6 +52,9 @@ class Notes extends Component {
               // Save the user in localstorage
           }
       });
+
+      location.reload()
+      
       }
 
       handleChange(e){
@@ -124,10 +128,7 @@ class Notes extends Component {
             </ButtonToolbar>
            </Modal.Footer>
             </Modal>
-                
-                
-                
-                
+
                 </div>
         );
       }

@@ -85,8 +85,13 @@ func JoinClass(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Find the user and update his classes
+	u, _ := repo.FindUserByUsername(request.StudentName)
+	u.Classes = append(u.Classes, request.Title)
+	repo.UpdateUser(u)
+
 	c.AddStudentToClass(request.StudentName)
-	err = repo.UpdateClass(c)
+	repo.UpdateClass(c)
 
 	byteSlice, err := json.Marshal(&c)
 	if err != nil {
@@ -109,7 +114,7 @@ func GetClass(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Title: ", request.Title)
 
-	// Add student to class
+	// Find class
 	c, err := repo.FindClass(request.Title)
 	if err != nil {
 		http.Error(w, "Class Not Found", 500)
@@ -163,7 +168,16 @@ func LeaveClass(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	byteSlice, err := json.Marshal(&c)
+	s, err := repo.FindUserByUsername(request.StudentName)
+	if err != nil {
+		http.Error(w, "Error Finding User Class", 500)
+		return
+	}
+
+	s.LeaveClass(request.Title)
+	repo.UpdateUser(s)
+
+	byteSlice, err := json.Marshal(&s)
 	if err != nil {
 		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
 	} else {
@@ -228,7 +242,7 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 
 	// Check class title is valid
 	if request.ClassTitle == "" {
-		panic(err)
+		fmt.Println("Empty title")
 		http.Error(w, "Empty Title", 500)
 		return
 	}
@@ -236,7 +250,7 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	// Add student to class
 	c, err := repo.FindClass(request.ClassTitle)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error finding class")
 		http.Error(w, "Class Not Found", 500)
 		return
 	}
@@ -247,7 +261,7 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	// find the user who created the question and add to their questionAskedCt
 	usr, err := repo.FindUserByUsername(request.User)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error finding user")
 		http.Error(w, "User Not Found", 500)
 		return
 	}
@@ -257,14 +271,14 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	// Update the class and user
 	err = repo.UpdateClass(c)
 	if err != nil {
-		panic(err)
+		fmt.Println("error updating class")
 		http.Error(w, "Error Updating Class", 500)
 		return
 	}
 
 	err = repo.UpdateUser(usr)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error updating user")
 		http.Error(w, "Error Updating User", 500)
 		return
 	}

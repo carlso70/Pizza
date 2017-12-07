@@ -56,9 +56,10 @@ func (c *Class) CreateQuestion(ques string) {
 }
 
 func (c *Class) AnswerQuestion(ques, answer string) error {
-	for _, q := range c.Questions {
+	for key, q := range c.Questions {
 		if q.Question == ques {
 			q.Answers = append(q.Answers, answer)
+			c.Questions[key] = q
 			return nil
 		}
 	}

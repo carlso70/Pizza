@@ -12,7 +12,7 @@ import {
     FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { joinClassUrl, getUserClasses, newClassUrl, getAllClassesUrl } from '../../utils/urls';
+import { joinClassUrl, getUserClasses, newClassUrl, getAllClassesUrl, leaveClassUrl } from '../../utils/urls';
 import Classroom from '../../components/Classroom/Classroom';
 
 class Classes extends Component {
@@ -66,7 +66,7 @@ class Classes extends Component {
             student: this.state.username,
             title: c
         }
-        fetch(joinClassUrl, {
+        fetch(leaveClassUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain',
@@ -134,6 +134,7 @@ class Classes extends Component {
         }).then(function(data) {
             if (data) {
                 console.log(data)
+                location.reload()
             }
         });
     }
@@ -154,6 +155,7 @@ class Classes extends Component {
         }).then(function(data) {
             if (data) {
                 console.log(data)
+                location.reload()
             }
         });
     }
@@ -270,7 +272,7 @@ class Classes extends Component {
                     <ListGroup>
                     {
                         this.state.classes.map((listValue) => {
-                            return <ListGroupItem bsStyle="danger" onClick={() => leaveClass(listValue.title)}>{listValue.title}</ListGroupItem>
+                            return <ListGroupItem bsStyle="danger" onClick={() => this.leaveClass(listValue.title)}>{listValue.title}</ListGroupItem>
                         })
                     }
                     </ListGroup>

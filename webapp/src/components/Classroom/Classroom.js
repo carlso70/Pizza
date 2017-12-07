@@ -4,15 +4,17 @@ import {
     Panel,
     ListGroup,
     ListGroupItem,
+    InputGroup,
     Button,
     ButtonGroup,
+    Jumbotron,
     Modal,
     Form,
     FormControl,
     FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { getClass, createQuestionUrl } from '../../utils/urls';
+import { getClass, createQuestionUrl, answerQuestionUrl } from '../../utils/urls';
 
 class Classroom extends Component {
     constructor(props) {
@@ -22,25 +24,34 @@ class Classroom extends Component {
             username: username,
             loggedIn: username == null ? false : true,
             classTitle: this.props.classTitle,
-            class: {},
+            class: {questions:[]},
             showQuestionModal: false,
-            newQuestion: ""
+            showAnswerModal: false,
+            questionAnswering: "",
+            newQuestion: "",
+            newAnswer: ""
         };
 
         this.handleNewQuestion = this.handleNewQuestion.bind(this);
+        this.handleNewAnswer = this.handleNewAnswer.bind(this);
         this.close = this.close.bind(this);
         this.postNewQuestion = this.postNewQuestion.bind(this);
+        this.answerQuestion = this.answerQuestion.bind(this);
         this.fetchClassData = this.fetchClassData.bind(this);
-        this.fetchClassData();
+        this.fetchClassData(this.props.title);
     }
 
     componentWillUpdate(nextProps, nextState) {
-        nextState.classTitle = nextProps.classTitle
+        if (this.state.classTitle != nextProps.classTitle) {
+            nextState.classTitle = nextProps.classTitle;
+            this.fetchClassData(nextProps.classTitle);
+        }
     }
 
-    fetchClassData() {
+
+    fetchClassData(title) {
         var payload = {
-            title: this.state.classTitle
+            title: title == null ? this.state.classTitle : title
         }
         fetch(getClass, {
             method: 'POST',
@@ -53,7 +64,12 @@ class Classroom extends Component {
         }).then((data) => {
             if (data) {
                 console.log(data)
-                this.setState({ class : data});
+                if (data.questions == null) {
+                    data.questions = [];
+                    this.setState({class : data});
+                } else {
+                    this.setState({class : data});
+                }
             }
         });
     }
@@ -76,13 +92,58 @@ class Classroom extends Component {
         }).then((data) => {
             if (data) {
                 console.log(data)
-                this.setState({
-                    class: data,
-                    showQuestionModal: false
-                });
+                if (data.questions == null) {
+                    data.questions = [];
+                    this.setState({
+                        class : data,
+                        showQuestionModal: false
+                    });
+                } else {
+                    this.setState({
+                        class : data,
+                        showQuestionModal: false
+                    });
+                }
             }
         });
     }
+
+    postNewAnswer() {
+        var payload = {
+            class: this.state.classTitle,
+            username: this.state.username,
+            question: this.state.newQuestion,
+            answer: this.state.newAnswer
+        }
+        console.log(JSON.stringify(payload));
+        fetch(answerQuestionUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data) {
+                console.log(data)
+                if (data.questions == null) {
+                    data.questions = [];
+                    this.setState({
+                        class : data,
+                        showQuestionModal: false
+                    });
+                } else {
+                    this.setState({
+                        class : data,
+                        showQuestionModal: false
+                    });
+                }
+            }
+        });
+    }
+
+
 
     handleNewQuestion(e) {
         this.setState({
@@ -90,9 +151,23 @@ class Classroom extends Component {
         });
     }
 
+    handleNewAnswer(e) {
+        this.setState({
+            newAnswer: e.target.value
+        });
+    }
+
+    answerQuestion(question) {
+        this.setState({
+            showAnswerModal: true,
+            newQuestion: question
+        });
+    }
+
     close() {
         this.setState({
-            showQuestionModal: false
+            showQuestionModal: false,
+            showAnswerModal: false
         });
     }
 
@@ -107,11 +182,29 @@ class Classroom extends Component {
         }else {
             return (
                     <div className="animated fadeIn">
-                    {this.state.classTitle}
                     <Panel>
+                    <h4>{this.state.classTitle}</h4>
                     <Button bsStyle="primary" onClick={() => this.setState({showQuestionModal: true})}>Ask Question</Button>
                     </Panel>
-
+                    <ListGroup id="ref">
+                    {
+                        this.state.class.questions.map((listValue) => {
+                            return <div>
+                                <Jumbotron>
+                                <h1>{listValue.question}</h1>
+                                <ListGroup>
+                                {
+                                    listValue.answers.map((answer) => {
+                                        return <ListGroupItem>{answer}</ListGroupItem>
+                                    })
+                                }
+                                </ListGroup>
+                                <Button onClick={() => this.answerQuestion(listValue.question)}>Answer Question</Button>
+                                </Jumbotron>
+                                </div>
+                        })
+                    }
+                </ListGroup>
 
                     <Modal show={this.state.showQuestionModal} onHide={this.close}>
                     <Modal.Header closeButton>
@@ -130,6 +223,27 @@ class Classroom extends Component {
                     </Modal.Body>
                     <Modal.Footer>
                     <Button onClick={() => {this.postNewQuestion()}}>Post</Button>
+                    <Button onClick={this.close}>Close</Button>
+                    </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={this.state.showAnswerModal} onHide={this.close}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Answering Question: {this.state.newQuestion}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <Form>
+                    <FormGroup>
+                    <FormControl
+               type="text"
+               placeholder="Response"
+               value={this.state.newAnswer}
+               onChange={this.handleNewAnswer}/>
+                    </FormGroup>
+                    </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button onClick={() => this.postNewAnswer()}>Post</Button>
                     <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                     </Modal>

@@ -12,7 +12,7 @@ import {
     FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { getClass } from '../../utils/urls';
+import { getClass, createQuestionUrl } from '../../utils/urls';
 
 class Classroom extends Component {
     constructor(props) {
@@ -56,14 +56,15 @@ class Classroom extends Component {
 
     postNewQuestion() {
         var payload = {
-            class: this.state.classTitle,
+            class: this.props.classTitle,
             username: this.state.username,
-            question: this.state.newQuestion
+            question: this.state.newQuestion,
         }
-        fetch(getClass, {
+        console.log(JSON.stringify(payload));
+        fetch(createQuestionUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(payload)
         }).then((response) => {

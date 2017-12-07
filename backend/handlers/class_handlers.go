@@ -233,15 +233,15 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 
 	// Check class title is valid
 	if request.ClassTitle == "" {
-		panic(err)
+		fmt.Println("Empty title")
 		http.Error(w, "Empty Title", 500)
 		return
 	}
 
 	// Add student to class
 	c, err := repo.FindClass(request.ClassTitle)
-	if err != nil && c.Title != request.ClassTitle {
-		fmt.Println(err)
+	if err != nil {
+		fmt.Println("Error finding class")
 		http.Error(w, "Class Not Found", 500)
 		return
 	}
@@ -252,7 +252,7 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	// find the user who created the question and add to their questionAskedCt
 	usr, err := repo.FindUserByUsername(request.User)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error finding user")
 		http.Error(w, "User Not Found", 500)
 		return
 	}
@@ -262,14 +262,14 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 	// Update the class and user
 	err = repo.UpdateClass(c)
 	if err != nil {
-		panic(err)
+		fmt.Println("error updating class")
 		http.Error(w, "Error Updating Class", 500)
 		return
 	}
 
 	err = repo.UpdateUser(usr)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error updating user")
 		http.Error(w, "Error Updating User", 500)
 		return
 	}

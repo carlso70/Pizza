@@ -85,8 +85,13 @@ func JoinClass(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Find the user and update his classes
+	u, _ := repo.FindUserByUsername(request.StudentName)
+	u.Classes = append(u.Classes, request.Title)
+	repo.UpdateUser(u)
+
 	c.AddStudentToClass(request.StudentName)
-	err = repo.UpdateClass(c)
+	repo.UpdateClass(c)
 
 	byteSlice, err := json.Marshal(&c)
 	if err != nil {

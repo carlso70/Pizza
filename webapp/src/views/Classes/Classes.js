@@ -12,7 +12,7 @@ import {
     FormGroup
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
-import { joinCl, getUserClasses, newClassUrl, getAllClassesUrl } from '../../utils/urls';
+import { joinClassUrl, getUserClasses, newClassUrl, getAllClassesUrl } from '../../utils/urls';
 
 class Classes extends Component {
     constructor(props) {
@@ -33,6 +33,7 @@ class Classes extends Component {
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleNewClassName = this.handleNewClassName.bind(this);
         this.close = this.close.bind(this);
+        this.joinClass = this.joinClass.bind(this);
         this.fetchUserClasses(username);
     }
 
@@ -55,6 +56,27 @@ class Classes extends Component {
             }
         });
     }
+
+    joinClass(c) {
+        var payload = {
+            student: this.state.username,
+            title: c
+        }
+        fetch(joinClassUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify(payload),
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data) {
+                console.log(data)
+            }
+        });
+    }
+
 
     fetchAllClasses() {
         fetch(getAllClassesUrl, {
@@ -97,7 +119,7 @@ class Classes extends Component {
             title: title,
             student: this.state.username
         };
-        fetch(join, {
+        fetch(joinClassUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain',
@@ -238,8 +260,8 @@ class Classes extends Component {
                     <Modal.Body>
                     <ListGroup>
                     {
-                        this.state.allClasses.map(function(listValue){
-                            return <ListGroupItem active>{listValue.title}</ListGroupItem>
+                        this.state.allClasses.map((listValue) => {
+                            return <ListGroupItem onClick={() => this.joinClass(listValue.title)} active>{listValue.title}</ListGroupItem>
                         })
                     }
                     </ListGroup>
@@ -248,8 +270,6 @@ class Classes extends Component {
                     <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                     </Modal>
-
-
                 </div>
             );
         }

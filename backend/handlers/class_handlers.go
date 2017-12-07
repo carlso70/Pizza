@@ -114,7 +114,7 @@ func GetClass(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Title: ", request.Title)
 
-	// Add student to class
+	// Find class
 	c, err := repo.FindClass(request.Title)
 	if err != nil {
 		http.Error(w, "Class Not Found", 500)
@@ -240,8 +240,8 @@ func CreateQuestion(w http.ResponseWriter, r *http.Request) {
 
 	// Add student to class
 	c, err := repo.FindClass(request.ClassTitle)
-	if err != nil {
-		panic(err)
+	if err != nil && c.Title != request.ClassTitle {
+		fmt.Println(err)
 		http.Error(w, "Class Not Found", 500)
 		return
 	}

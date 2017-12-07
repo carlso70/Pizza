@@ -9,6 +9,7 @@ import {
     Tab
 } from 'react-bootstrap';
 import { checkLoggedIn } from '../../utils/userTools';
+import Notes from '../../components/Notes/Notes'
 
 class NoteTaker extends Component {
     constructor(props) {
@@ -38,6 +39,7 @@ class NoteTaker extends Component {
             return (
                     <div className="animated fadeIn">
                     <Panel header={<h4>Your Notes</h4>}>
+                    <Notes />
                     <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
                     <Tab eventKey={1} title="Class 1">Class 1 Notes</Tab>
                     <Tab eventKey={2} title="Class 2">Class 2 Notes</Tab>

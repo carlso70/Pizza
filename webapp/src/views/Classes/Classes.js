@@ -144,6 +144,7 @@ class Classes extends Component {
             return response.json();
         }).then((data) => {
             if (data) {
+                console.log(data)
                 this.setState({ allClasses: data});
             }
         });

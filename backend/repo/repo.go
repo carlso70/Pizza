@@ -208,10 +208,17 @@ func UpdateClass(cl class.Class) error {
 }
 
 func GetUserClasses(u user.User) []class.Class {
-	classes := make([]class.Class, 0)
-	for _, class := range u.Classes {
-		c, _ := FindClass(class)
-		classes = append(classes, c)
+	uClasses := make([]class.Class, 0)
+	classes, _ := GetAllClasses()
+	// Loop through all classes
+	for _, class := range classes {
+		for _, student := range class.Students {
+			// if a student is in a class append it to the userclass array and return
+			if student == u.Username {
+				uClasses = append(uClasses, class)
+			}
+		}
+
 	}
-	return classes
+	return uClasses
 }

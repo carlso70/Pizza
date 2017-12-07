@@ -105,8 +105,8 @@ class User extends Component {
                     </Panel>
                     <Panel header={<h4>{this.state.username}'s stats</h4>}>
                     <ListGroup>
-                    <ListGroupItem>Total Classes Enrolled for QA: {this.state.classesQA.length}</ListGroupItem>
                     <ListGroupItem>Total Classes with Notes: {this.state.classes.length}</ListGroupItem>
+                    <ListGroupItem>Total Classes Enrolled for QA: {this.state.classesQA.length}</ListGroupItem>
                     <ListGroupItem>Total Questions Asked: {this.state.questionCt}</ListGroupItem>
                     </ListGroup>
                     </Panel>

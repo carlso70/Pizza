@@ -168,7 +168,16 @@ func LeaveClass(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	byteSlice, err := json.Marshal(&c)
+	s, err := repo.FindUserByUsername(request.StudentName)
+	if err != nil {
+		http.Error(w, "Error Finding User Class", 500)
+		return
+	}
+
+	s.LeaveClass(request.Title)
+	repo.UpdateUser(s)
+
+	byteSlice, err := json.Marshal(&s)
 	if err != nil {
 		fmt.Fprintf(w, "%s\n", "{ \"message\":\"failed\"}")
 	} else {

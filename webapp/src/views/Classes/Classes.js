@@ -36,6 +36,7 @@ class Classes extends Component {
         this.handleNewClassName = this.handleNewClassName.bind(this);
         this.close = this.close.bind(this);
         this.joinClass = this.joinClass.bind(this);
+        this.leaveClass = this.leaveClass.bind(this);
         this.setClassroom = this.setClassroom.bind(this);
         this.fetchUserClasses(username);
     }
@@ -56,6 +57,26 @@ class Classes extends Component {
             if (data) {
                 console.log(data)
                 this.setState({ classes : data});
+            }
+        });
+    }
+
+    leaveClass(c) {
+        var payload = {
+            student: this.state.username,
+            title: c
+        }
+        fetch(joinClassUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: JSON.stringify(payload),
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if (data) {
+                console.log(data)
             }
         });
     }
@@ -248,8 +269,8 @@ class Classes extends Component {
                     <Modal.Body>
                     <ListGroup>
                     {
-                        this.state.classes.map(function(listValue){
-                            return <ListGroupItem bsStyle="danger" onClick={() => alert(listValue.title)}>{listValue.title}</ListGroupItem>
+                        this.state.classes.map((listValue) => {
+                            return <ListGroupItem bsStyle="danger" onClick={() => leaveClass(listValue.title)}>{listValue.title}</ListGroupItem>
                         })
                     }
                     </ListGroup>

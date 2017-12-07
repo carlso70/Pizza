@@ -25,3 +25,12 @@ func NewUser() *User {
 		QuestionAnswerCt: 0,
 	}
 }
+
+func (u *User) LeaveClass(c string) {
+	for index, value := range u.Classes {
+		if value == c {
+			u.Classes = append(u.Classes[:index], u.Classes[index+1:]...)
+			return
+		}
+	}
+}

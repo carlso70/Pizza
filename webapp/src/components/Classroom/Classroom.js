@@ -34,6 +34,10 @@ class Classroom extends Component {
         this.fetchClassData();
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        nextState.classTitle = nextProps.classTitle
+    }
+
     fetchClassData() {
         var payload = {
             title: this.state.classTitle
@@ -72,7 +76,10 @@ class Classroom extends Component {
         }).then((data) => {
             if (data) {
                 console.log(data)
-                this.setState({ class : data});
+                this.setState({
+                    class: data,
+                    showQuestionModal: false
+                });
             }
         });
     }
@@ -100,7 +107,7 @@ class Classroom extends Component {
         }else {
             return (
                     <div className="animated fadeIn">
-                    <h4>{this.state.classTitle}</h4>
+                    {this.state.classTitle}
                     <Panel>
                     <Button bsStyle="primary" onClick={() => this.setState({showQuestionModal: true})}>Ask Question</Button>
                     </Panel>
@@ -122,11 +129,10 @@ class Classroom extends Component {
                     </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                    <Button onClick={() => this.postNewQuestion()}>Post</Button>
+                    <Button onClick={() => {this.postNewQuestion()}}>Post</Button>
                     <Button onClick={this.close}>Close</Button>
                     </Modal.Footer>
                     </Modal>
-
                     </div>
             );
         }

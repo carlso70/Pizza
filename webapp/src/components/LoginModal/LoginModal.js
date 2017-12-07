@@ -38,7 +38,7 @@ class LoginModal extends Component {
             if (data) {
                 console.log(data)
                 // Save the user in localstorage
-                localStorage.setItem("pizzaUser", data.username);
+                alert("Success!");
                 location.reload();
             }
         });

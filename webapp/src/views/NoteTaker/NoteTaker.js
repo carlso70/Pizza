@@ -100,6 +100,7 @@ class NoteTaker extends Component {
     }
 
     render() {
+        
         if (!this.state.loggedIn) {
             return(
                     <div className="animated fadeIn" style={{padding: 60}}>

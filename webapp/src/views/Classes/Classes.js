@@ -134,7 +134,6 @@ class Classes extends Component {
         }).then(function(data) {
             if (data) {
                 console.log(data)
-                location.reload()
             }
         });
     }
